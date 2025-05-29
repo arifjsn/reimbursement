@@ -1,0 +1,48 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Http\Requests\ProfileRequest;
+use App\Models\User;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+
+class ProfileController extends Controller
+{
+    public function index()
+    {
+        return view('profile.index', [
+            'user' => Auth::user()
+        ]);
+    }
+
+    public function update(ProfileRequest $request): RedirectResponse
+    {
+        DB::beginTransaction();
+        try {
+            $user = User::where('email', $request->email)->firstOrFail();
+
+            $updateData = [
+                'name' => $request->name,
+                'username' => $request->username,
+            ];
+
+            // If a new password is provided, update the password
+            if ($request->filled('password')) {
+                $updateData['password'] = Hash::make($request->password);
+            }
+
+            $user->update($updateData);
+
+            DB::commit();
+            return redirect()->back()->with('success', 'Your profile has been updated.');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            Log::error('Profile update failed: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'An error occurred while updating your profile.');
+        }
+    }
+}

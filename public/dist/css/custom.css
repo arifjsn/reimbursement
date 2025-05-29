@@ -1,0 +1,8 @@
+.btn:not(:disabled):not(.disabled) {
+    border: 1px solid #80808059;
+}
+
+.centered {
+    vertical-align: middle !important;
+    text-align: center;
+}
