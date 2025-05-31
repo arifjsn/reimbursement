@@ -11,13 +11,19 @@ class ReimbursementController extends Controller
 {
     /**
      * Display a listing of reimbursements.
-     *
-     * @return \Illuminate\View\View
      */
     public function index()
     {
-        $reimbursements = Reimbursement::all();
-        return view('reimbursement.form', compact('reimbursements'));
+        $reimbursements = Reimbursement::where('user_id', Auth::id())->get();
+        return view('reimbursement.index', compact('reimbursements'));
+    }
+
+    /**
+     * Show the form for creating a new reimbursement.
+     */
+    public function create()
+    {
+        return view('reimbursement.form');
     }
 
     /**
@@ -38,20 +44,17 @@ class ReimbursementController extends Controller
             'expense_amount.*' => 'required|integer|min:0',
         ]);
 
-        // Upload proof file if exists (image only)
         $proofPath = null;
         if ($request->hasFile('proof')) {
             $proofPath = $request->file('proof')->store('proofs', 'public');
         }
 
-        // Create reimbursement
         $reimbursement = Reimbursement::create([
             'user_id' => Auth::id(),
             'proof' => $proofPath,
             'status' => 'requested',
         ]);
 
-        // Simpan detail pengeluaran
         foreach ($request->expense_date as $i => $date) {
             ReimbursementDetail::create([
                 'reimbursement_id' => $reimbursement->id,
@@ -62,5 +65,81 @@ class ReimbursementController extends Controller
         }
 
         return redirect()->route('reimbursement.index')->with('success', 'Reimbursement submitted successfully.');
+    }
+
+    /**
+     * Show the form for editing the specified reimbursement.
+     */
+    public function edit($id)
+    {
+        $reimbursement = Reimbursement::where('user_id', Auth::id())->findOrFail($id);
+        $details = $reimbursement->details()->get();
+        return view('reimbursement.edit', compact('reimbursement', 'details'));
+    }
+
+    /**
+     * Update the specified reimbursement in storage.
+     */
+    public function update(Request $request, $id)
+    {
+        $reimbursement = Reimbursement::where('user_id', Auth::id())->findOrFail($id);
+
+        $request->validate([
+            'proof' => 'nullable|file|mimes:jpeg,png,jpg|max:2048',
+            'expense_date' => 'required|array',
+            'expense_date.*' => 'required|date',
+            'expense_description' => 'required|array',
+            'expense_description.*' => 'required|string',
+            'expense_amount' => 'required|array',
+            'expense_amount.*' => 'required|integer|min:0',
+        ]);
+
+        $proofPath = $reimbursement->proof;
+        if ($request->hasFile('proof')) {
+            $proofPath = $request->file('proof')->store('proofs', 'public');
+        }
+
+        $reimbursement->update([
+            'proof' => $proofPath,
+        ]);
+
+        // Hapus detail lama
+        $reimbursement->details()->delete();
+
+        // Simpan detail baru
+        foreach ($request->expense_date as $i => $date) {
+            ReimbursementDetail::create([
+                'reimbursement_id' => $reimbursement->id,
+                'date' => $date,
+                'description' => $request->expense_description[$i],
+                'money' => $request->expense_amount[$i],
+            ]);
+        }
+
+        return redirect()->route('reimbursement.index')->with('success', 'Reimbursement updated successfully.');
+    }
+
+    /**
+     * Remove the specified reimbursement from storage.
+     */
+    public function destroy($id)
+    {
+        $reimbursement = Reimbursement::where('user_id', Auth::id())->findOrFail($id);
+        $reimbursement->details()->delete();
+        $reimbursement->delete();
+
+        return redirect()->route('reimbursement.index')->with('success', 'Reimbursement deleted successfully.');
+    }
+
+    /**
+     * Display the specified reimbursement detail.
+     */
+    public function detail($id)
+    {
+        $reimbursement = Reimbursement::with(['details', 'user'])
+            ->where('user_id', Auth::id())
+            ->findOrFail($id);
+
+        return view('reimbursement.detail', compact('reimbursement'));
     }
 }

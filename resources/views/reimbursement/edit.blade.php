@@ -1,19 +1,20 @@
 @extends('templates.main')
 
 @section('title')
-Reimbursement Form
+Edit Reimbursement
 @endsection
 
 @section('body')
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-12 col-md-10 col-lg-8">
-            <div class="card card-primary mt-4" style="border-top: 3px solid maroon;">
+            <div class="card card-primary mt-4">
                 <div class="card-header" style="background-color: maroon; color: #fff;">
-                    <h3 class="card-title mb-0">Reimbursement Form</h3>
+                    <h3 class="card-title mb-0">Edit Reimbursement</h3>
                 </div>
-                <form action="{{ route('reimbursement.store') }}" method="post" enctype="multipart/form-data">
+                <form action="{{ route('reimbursement.update', $reimbursement->id) }}" method="post" enctype="multipart/form-data">
                     @csrf
+                    @method('PUT')
                     <div class="card-body">
                         @if ($errors->any())
                         <div class="alert alert-danger">
@@ -39,14 +40,19 @@ Reimbursement Form
                         <div class="form-group">
                             <label>Upload Proof</label>
                             <input type="file" name="proof" class="form-control-file" accept=".jpeg,.png,.jpg">
-                            <small class="form-text text-muted">*Upload proof as image (.jpeg, .png, .jpg). Leave blank if not available.</small>
+                            @if($reimbursement->proof)
+                            <div class="mt-2">
+                                <a href="{{ asset('storage/'.$reimbursement->proof) }}" target="_blank" class="btn btn-sm btn-info">View Current Proof</a>
+                            </div>
+                            @endif
+                            <small class="form-text text-muted">*Upload proof as image (.jpeg, .png, .jpg). Leave blank to keep current proof.</small>
                         </div>
 
                         <div class="form-group">
                             <label>Expense List</label>
                             <div class="table-responsive">
-                                <table class="table table-bordered mb-0" id="expenseTable" style="border-color: maroon;">
-                                    <thead style="background-color: maroon; color: #fff;">
+                                <table class="table table-bordered mb-0" id="expenseTable">
+                                    <thead>
                                         <tr>
                                             <th style="min-width: 100px;">Date</th>
                                             <th style="min-width: 120px;">Description</th>
@@ -55,39 +61,22 @@ Reimbursement Form
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if(old('expense_date'))
-                                        @for ($i = 0; $i < count(old('expense_date')); $i++)
-                                            <tr>
+                                        @foreach($details as $i => $detail)
+                                        <tr>
                                             <td>
-                                                <input type="date" name="expense_date[]" class="form-control" value="{{ old('expense_date.'.$i) }}" required>
+                                                <input type="date" name="expense_date[]" class="form-control" value="{{ $detail->date }}" required>
                                             </td>
                                             <td>
-                                                <input type="text" name="expense_description[]" class="form-control" value="{{ old('expense_description.'.$i) }}" required>
+                                                <input type="text" name="expense_description[]" class="form-control" value="{{ $detail->description }}" required>
                                             </td>
                                             <td>
-                                                <input type="number" name="expense_amount[]" class="form-control" value="{{ old('expense_amount.'.$i) }}" required onkeyup="calculateTotal();">
+                                                <input type="number" name="expense_amount[]" class="form-control" value="{{ $detail->money }}" required onkeyup="calculateTotal();">
                                             </td>
                                             <td>
                                                 <button type="button" class="btn btn-danger btn-sm" onclick="delRow(this)"><i class="fa fa-minus"></i></button>
                                             </td>
-                                            </tr>
-                                            @endfor
-                                            @else
-                                            <tr>
-                                                <td>
-                                                    <input type="date" name="expense_date[]" class="form-control" required>
-                                                </td>
-                                                <td>
-                                                    <input type="text" name="expense_description[]" class="form-control" required>
-                                                </td>
-                                                <td>
-                                                    <input type="number" name="expense_amount[]" class="form-control" required onkeyup="calculateTotal();">
-                                                </td>
-                                                <td>
-                                                    <button type="button" class="btn btn-danger btn-sm" onclick="delRow(this)"><i class="fa fa-minus"></i></button>
-                                                </td>
-                                            </tr>
-                                            @endif
+                                        </tr>
+                                        @endforeach
                                     </tbody>
                                     <tfoot>
                                         <tr>
@@ -104,10 +93,13 @@ Reimbursement Form
                         </div>
                     </div>
                     <div class="card-footer text-center">
-                        <button type="submit" class="btn" style="background-color: maroon; color: #fff; width:100%;">
+                        <button type="submit" class="btn btn-primary btn-block">
                             <i class="fa fa-check-circle"></i>
-                            Submit
+                            Update
                         </button>
+                        <a href="{{ route('reimbursement.index') }}" class="btn btn-secondary mt-2">
+                            <i class="fa fa-arrow-left"></i> Back
+                        </a>
                     </div>
                 </form>
             </div>
@@ -141,18 +133,19 @@ Reimbursement Form
             margin-bottom: 0.5rem;
         }
     }
-    /* Tambahan untuk warna maroon */
-    .btn-primary, .btn-primary:active, .btn-primary:focus, .btn-primary:hover {
+
+    .btn-primary,
+    .btn-primary:active,
+    .btn-primary:focus,
+    .btn-primary:hover {
         background-color: maroon !important;
         border-color: maroon !important;
         color: #fff !important;
     }
+
     .table thead {
         background-color: maroon !important;
         color: #fff !important;
-    }
-    .card-primary.card-outline {
-        border-top: 3px solid maroon !important;
     }
 </style>
 

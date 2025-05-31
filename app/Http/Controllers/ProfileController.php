@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileRequest;
-use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -23,19 +22,19 @@ class ProfileController extends Controller
     {
         DB::beginTransaction();
         try {
-            $user = User::where('email', $request->email)->firstOrFail();
+            $user = Auth::user();
 
             $updateData = [
                 'name' => $request->name,
                 'username' => $request->username,
             ];
 
-            // If a new password is provided, update the password
             if ($request->filled('password')) {
                 $updateData['password'] = Hash::make($request->password);
             }
 
-            $user->update($updateData);
+            $user->fill($updateData);
+            $user->save();
 
             DB::commit();
             return redirect()->back()->with('success', 'Your profile has been updated.');

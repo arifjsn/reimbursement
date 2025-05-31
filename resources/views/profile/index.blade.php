@@ -50,7 +50,10 @@ Profile
                                 <div class="form-group row">
                                     <label for="username" class="col-sm-2 col-form-label">Username</label>
                                     <div class="col-sm-10">
-                                        <input type="text" class="form-control" name="username" id="username" value="{{ $user->username }}" readonly>
+                                        <input type="text" class="form-control" name="username" id="username" value="{{ $user->username }}">
+                                        @error('username')
+                                        <span class="text-danger">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="form-group row">

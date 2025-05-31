@@ -13,11 +13,6 @@ class ReimbursementDetail extends Model
     protected $table = 'reimbursement_details';
     protected $guarded = ['id'];
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
     public function reimbursement(): BelongsTo
     {
         return $this->belongsTo(Reimbursement::class, 'reimbursement_id');
