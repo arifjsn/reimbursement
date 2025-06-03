@@ -10,22 +10,22 @@
 
                 <li class="nav-header font-weight-bold mt-2">Main</li>
                 <li class="nav-item">
-                    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->segment(1) == 'dashboard' ? 'active' : '' }}">
+                    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                         <i class="nav-icon fa fa-tachometer"></i>
                         <p>Dashboard</p>
                     </a>
                 </li>
                 <li class="nav-header font-weight-bold mt-2">Account</li>
                 <li class="nav-item">
-                    <a href="{{ route('profile.index') }}" class="nav-link {{ request()->segment(1) == 'profile' ? 'active' : '' }}">
+                    <a href="{{ route('profile.index') }}" class="nav-link {{ request()->routeIs('profile.*') ? 'active' : '' }}">
                         <i class="nav-icon fa fa-user"></i>
                         <p>Profile</p>
                     </a>
                 </li>
 
                 @role('Admin')
-                <li class="nav-item">
-                    <a href="#" class="nav-link {{ request()->segment(1) == 'admin' ? 'active' : '' }}">
+                <li class="nav-item has-treeview {{ request()->is('admin*') ? 'menu-open' : '' }}">
+                    <a href="#" class="nav-link {{ request()->is('admin*') ? 'active' : '' }}">
                         <i class="nav-icon fa fa-bar-chart"></i>
                         <p>
                             Admin
@@ -34,9 +34,15 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('admin.log.index') }}" class="nav-link {{ request()->segment(2) == 'log' ? 'active' : '' }}">
+                            <a href="{{ route('admin.log.index') }}" class="nav-link {{ request()->routeIs('admin.log.*') ? 'active' : '' }}">
                                 <i class="fa fa-circle nav-icon"></i>
                                 <p>Logs</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ route('reimbursement.index') }}" class="nav-link {{ request()->routeIs('reimbursement.*') ? 'active' : '' }}">
+                                <i class="fa fa-circle nav-icon"></i>
+                                <p>Reimbursements</p>
                             </a>
                         </li>
                     </ul>
@@ -45,7 +51,7 @@
 
                 @role('User')
                 <li class="nav-item">
-                    <a href="{{ route('reimbursement.index') }}" class="nav-link {{ request()->segment(1) == 'reimbursement' ? 'active' : '' }}">
+                    <a href="{{ route('reimbursement.index') }}" class="nav-link {{ request()->routeIs('reimbursement.*') ? 'active' : '' }}">
                         <i class="nav-icon fa fa-money"></i>
                         <p>Reimbursement</p>
                     </a>
@@ -53,7 +59,7 @@
                 @endrole
 
                 <li class="nav-item">
-                    <a href="{{ route('logout') }}" class="nav-link">
+                    <a href="{{ route('logout') }}" class="nav-link" onclick="return confirm('Logout from this session?')">
                         <i class="nav-icon fa fa-sign-out"></i>
                         <p>Log Out</p>
                     </a>
