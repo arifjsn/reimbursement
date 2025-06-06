@@ -90,6 +90,7 @@
     <script src="{{ asset('plugins/bootstrap-select/bootstrap-select.js') }}"></script>
     <script src="{{ asset('plugins/toastr/toastr.min.js') }}"></script>
     <script src="{{ asset('plugins/ekko-lightbox/ekko-lightbox.min.js') }}"></script>
+    <script src="{{ asset('dist/js/sweetalert2@11.js') }}"></script>
     <script>
         $(document)
             .ready(function() {

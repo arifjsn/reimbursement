@@ -125,6 +125,14 @@ class ReimbursementController extends Controller
     public function destroy($id)
     {
         $reimbursement = Reimbursement::where('user_id', Auth::id())->findOrFail($id);
+
+        // Cegah hapus jika status sudah accepted/claimed atau rejected
+        if (in_array($reimbursement->status, ['claimed', 'rejected'])) {
+            return redirect()
+                ->route('reimbursement.index')
+                ->with('error', 'Reimbursement that has been '.$reimbursement->status.' cannot be deleted.');
+        }
+
         $reimbursement->details()->delete();
         $reimbursement->delete();
 

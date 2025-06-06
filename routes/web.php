@@ -1,7 +1,6 @@
 <?php
 
-use App\Http\Controllers\Admin\ClaimGaransiController as AdminClaimGaransiController;
-use App\Http\Controllers\Admin\RegistrasiGaransiController as AdminRegistrasiGaransiController;
+use App\Http\Controllers\Admin\ReimbursementController as AdminReimbursementController;
 use App\Http\Controllers\Admin\LogController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
@@ -53,6 +52,17 @@ Route::middleware(['auth'])->group(function () {
                 ->name('log.')
                 ->group(function () {
                     Route::get('/', 'index')->name('index');
+                });
+
+            // Tambahkan route untuk admin reimbursement
+            Route::controller(AdminReimbursementController::class)
+                ->prefix('reimbursement')
+                ->name('reimbursement.')
+                ->group(function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::get('/{id}/detail', 'detail')->name('detail');
+                    Route::post('/{id}/accept', 'accept')->name('accept');
+                    Route::post('/{id}/reject', 'reject')->name('reject');
                 });
         });
 });

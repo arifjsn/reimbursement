@@ -26,16 +26,26 @@ Dashboard
     @endif
 
     <div class="row">
-
         <div class="col-auto">
-            <a href="{{ route('reimbursement.index') }}">
-                <div class="card" style="width: 18rem;">
-                    <img class="card-img-top" src="{{ asset('dist/img/reimbursement.png') }}" alt="Reimbursement">
-                    <div class="card-body">
-                        <p class="card-text fw-bold">Reimbursement</p>
+            @if(auth()->user()->hasRole('Admin'))
+                <a href="{{ route('admin.reimbursement.index') }}">
+                    <div class="card" style="width: 18rem;">
+                        <img class="card-img-top" src="{{ asset('dist/img/reimbursement.png') }}" alt="Reimbursement">
+                        <div class="card-body">
+                            <p class="card-text fw-bold">Reimbursement</p>
+                        </div>
                     </div>
-                </div>
-            </a>
+                </a>
+            @else
+                <a href="{{ route('reimbursement.index') }}">
+                    <div class="card" style="width: 18rem;">
+                        <img class="card-img-top" src="{{ asset('dist/img/reimbursement.png') }}" alt="Reimbursement">
+                        <div class="card-body">
+                            <p class="card-text fw-bold">Reimbursement</p>
+                        </div>
+                    </div>
+                </a>
+            @endif
         </div>
     </div>
 </div>

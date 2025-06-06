@@ -1,262 +1,125 @@
 @extends('templates.main')
 
 @section('title')
-Detail Claim Garansi
+Reimbursement Detail
 @endsection
 
 @section('body')
-
-<div class="row">
-
-    <div class="container-fluid mb-3">
-        @if (session('error'))
-        <span class="alert alert-danger alert-dismissible fade show" role="alert">
-            {{ session('error') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </span>
-        @endif
-
-        @if (session('success'))
-        <span class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </span>
-        @endif
-    </div>
-
-    <div class="col-12">
-        <div class="card card-primary">
-            <div class="card-body">
-                <p class="card-text">
-                <table>
-                    <tr>
-                        <td>
-                            <h5><b>Nama &nbsp;</b></h5>
-                        </td>
-                        <td>
-                            <h5> : {{ $claimGaransi->nama }}</h5>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <h5><b>No Hp &nbsp;</b></h5>
-                        </td>
-                        <td>
-                            <h5> : {{ $claimGaransi->nomor_hp }}</h5>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <h5><b>Email &nbsp;</b></h5>
-                        </td>
-                        <td>
-                            <h5> : {{ $claimGaransi->email }}</h5>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <h5><b>Alamat &nbsp;</b></h5>
-                        </td>
-                        <td>
-                            <h5> : {{ $claimGaransi->alamat_penerima }}</h5>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <h5><b>Nomor Garansi &nbsp;</b></h5>
-                        </td>
-                        <td>
-                            <h5> : {{ $claimGaransi->nomor_garansi }}</h5>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <h5><b>Brand &nbsp;</b></h5>
-                        </td>
-                        <td>
-                            <h5> : {{ $claimGaransi->brand }}</h5>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <h5><b>Alasan Kerusakan &nbsp;</b></h5>
-                        </td>
-                        <td>
-                            <h5> : {{ $claimGaransi->alasan_kerusakan }}</h5>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <h5><b>Foto Tipe Barang &nbsp;</b></h5>
-                        </td>
-                        <td>
-                            <h5> : <a href="{{ asset($claimGaransi->foto_tipe_barang) }}" data-toggle="lightbox" data-title="Foto Tipe Barang">
-                                    <img src="{{ asset($claimGaransi->foto_tipe_barang) }}" alt="Foto Tipe Barang" width="200px">
-                                </a>
-                            </h5>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <h5><b>Foto Stiker &nbsp;</b></h5>
-                        </td>
-                        <td>
-                            <h5> : <a href="{{ asset($claimGaransi->foto_stiker) }}" data-toggle="lightbox" data-title="Foto Stiker"><img src="{{ asset($claimGaransi->foto_stiker) }}" alt="Foto Stiker" width="200px">
-                                </a>
-                            </h5>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <h5><b>Foto Kerusakan &nbsp;</b></h5>
-                        </td>
-                        <td>
-                            <h5> : <a href="{{ asset($claimGaransi->foto_kerusakan) }}" data-toggle="lightbox" data-title="Foto Kerusakan">
-                                    <img src="{{ asset($claimGaransi->foto_kerusakan) }}" alt="Foto Kerusakan" width="200px">
-                                </a>
-                            </h5>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <h5><b>Foto Struk Pembelian &nbsp;</b></h5>
-                        </td>
-                        <td>
-                            <h5> : <a href="{{ asset($claimGaransi->foto_struk_pembelian) }}" data-toggle="lightbox" data-title="Foto Struk Pembelian">
-                                    <img src="{{ asset($claimGaransi->foto_struk_pembelian) }}" alt="struk pembelian" width="200px">
-                                </a>
-                            </h5>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <h5><b>Nomor Invoice &nbsp;</b></h5>
-                        </td>
-                        <td>
-                            <h5> : {{ $claimGaransi->no_invoice }}</h5>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <h5><b>Model Barang &nbsp;</b></h5>
-                        </td>
-                        <td>
-                            <h5> : {{ $claimGaransi->model_barang }}</h5>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <h5><b>Jenis Barang &nbsp;</b></h5>
-                        </td>
-                        <td>
-                            <h5> : {{ $claimGaransi->jenis_barang }}</h5>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <h5><b>Tanggal Pembelian &nbsp;</b></h5>
-                        </td>
-                        <td>
-                            <h5> : {{ $claimGaransi->tanggal_pembelian }}</h5>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <h5><b>Metode Pembelian &nbsp;</b></h5>
-                        </td>
-                        <td>
-                            <h5> : {{ $claimGaransi->metode_pembelian }}</h5>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <h5><b>Nama Toko &nbsp;</b></h5>
-                        </td>
-                        <td>
-                            <h5> : {{ $claimGaransi->nama_toko }}</h5>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <h5><b>Keterangan Tambahan &nbsp;</b></h5>
-                        </td>
-                        <td>
-                            <h5> : {{ $claimGaransi->keterangan_tambahan }}</h5>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <h5><b>QR Code &nbsp;</b></h5>
-                        </td>
-                        <td>
-                            <h5> : {{ $claimGaransi->qr_code }}</h5>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <h5><b>Status &nbsp;</b></h5>
-                        </td>
-                        <td>
-                            <h5> : {{ $claimGaransi->status }}</h5>
-                        </td>
-                    </tr>
-                    @if ($claimGaransi->status === 'APPROVED')
-                    <tr>
-                        <td>
-                            <h5><b>Proses &nbsp;</b></h5>
-                        </td>
-                        <td>
-                            <h5> :
-                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-proses">
-                                    {{ $claimGaransi->progress }} <i class="nav-icon fa fa-pencil-square"></i>
-                                    <div></div>
-                                </button>
-                            </h5>
-                        </td>
-                    </tr>
-                    @endif
-                </table>
-                @if ($claimGaransi->status === 'PENDING')
-                <a href="{{ route('admin.claim-garansi.tolak', $claimGaransi->id) }}" class="btn btn-danger">Reject</a>
-                <a href="{{ route('admin.claim-garansi.terima', $claimGaransi->id) }}" class="btn btn-primary">Approve</a>
-                @endif
-                </p>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="modal-proses" style="display: none;" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title">Ubah Proses</h4>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <form action="{{ route('admin.claim-garansi.progress', $claimGaransi->id) }}">
-                <div class="modal-body">
-                    <select name="progress" id="progress" class="form-control form-control-sm">
-                        <option value="{{ $claimGaransi->progress }}">Saat ini : <b>{{ $claimGaransi->progress }}</b></option>
-                        <option value="PENGECEKAN UNIT">PENGECEKAN UNIT</option>
-                        <option value="PERGANTIAN UNIT">PERGANTIAN UNIT</option>
-                        <option value="PENGIRIMAN UNIT">PENGIRIMAN UNIT</option>
-                    </select>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+            <div class="card mt-4">
+                <div class="card-header" style="background-color: maroon; color: #fff;">
+                    <h3 class="card-title mb-0">Reimbursement Detail</h3>
                 </div>
-                <div class="modal-footer justify-content-between">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Tutup</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
-            </form>
+                <div class="card-body">
+                    <h5>User: {{ $reimbursement->user->name ?? '-' }}</h5>
+                    <p>Status:
+                        <span class="badge badge-{{ $reimbursement->status == 'requested' ? 'warning' : ($reimbursement->status == 'claimed' ? 'success' : 'danger') }}">
+                            {{ ucfirst($reimbursement->status) }}
+                        </span>
+                    </p>
+                    <p>Created at: {{ $reimbursement->created_at->format('d-m-Y H:i') }}</p>
+                    <p>
+                        Proof:
+                        @if($reimbursement->proof)
+                        <a href="{{ asset('storage/'.$reimbursement->proof) }}" target="_blank" class="btn btn-sm btn-info">View Proof</a>
+                        @else
+                        <span class="text-muted">-</span>
+                        @endif
+                    </p>
+                    <hr>
+                    <h5>Expense Details</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead style="background-color: maroon; color: #fff;">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Date</th>
+                                    <th>Description</th>
+                                    <th>Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php $total = 0; @endphp
+                                @forelse($reimbursement->details as $detail)
+                                @php $total += $detail->money; @endphp
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($detail->date)->format('d-m-y') }}</td>
+                                    <td>{{ $detail->description }}</td>
+                                    <td>Rp {{ number_format($detail->money, 0, ',', '.') }}</td>
+                                </tr>
+                                @empty
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">No expense details.</td>
+                                </tr>
+                                @endforelse
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="3" class="text-right">Total</th>
+                                    <th>Rp {{ number_format($total, 0, ',', '.') }}</th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                    <a href="{{ route('admin.reimbursement.index') }}" class="btn btn-secondary mt-2" style="display:inline-block;">
+                        <i class="fa fa-arrow-left"></i> Back
+                    </a>
+                    @if($reimbursement->status == 'requested')
+                        <form id="accept-form" action="{{ route('admin.reimbursement.accept', $reimbursement->id) }}" method="POST" style="display:inline-block; margin-left: 8px;">
+                            @csrf
+                            <button type="button" class="btn btn-success mt-2" onclick="confirmAccept()">
+                                <i class="fa fa-check"></i> Accept
+                            </button>
+                        </form>
+                        <form id="reject-form" action="{{ route('admin.reimbursement.reject', $reimbursement->id) }}" method="POST" style="display:inline-block; margin-left: 8px;">
+                            @csrf
+                            <button type="button" class="btn btn-danger mt-2" onclick="confirmReject()">
+                                <i class="fa fa-times"></i> Reject
+                            </button>
+                        </form>
+                    @endif
+                </div>
+            </div>
         </div>
     </div>
-
 </div>
-
-</div>
-
 @endsection
+
+@push('scripts')
+<script>
+    function confirmAccept() {
+        Swal.fire({
+            title: 'Accept this reimbursement?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#28a745',
+            cancelButtonColor: '#aaa',
+            confirmButtonText: 'Yes, Accept',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('accept-form').submit();
+            }
+        });
+    }
+
+    function confirmReject() {
+        Swal.fire({
+            title: 'Reject this reimbursement?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#aaa',
+            confirmButtonText: 'Yes, Reject',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('reject-form').submit();
+            }
+        });
+    }
+</script>
+@endpush

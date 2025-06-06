@@ -40,7 +40,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('reimbursement.index') }}" class="nav-link {{ request()->routeIs('reimbursement.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.reimbursement.index') }}" class="nav-link {{ request()->routeIs('admin.reimbursement.*') ? 'active' : '' }}">
                                 <i class="fa fa-circle nav-icon"></i>
                                 <p>Reimbursements</p>
                             </a>
