@@ -1,7 +1,7 @@
 @extends('templates.main')
 
 @section('title')
-    Reimbursement List
+    My Reimbursements
 @endsection
 
 @section('body')
@@ -29,6 +29,7 @@
                                         <th>Date</th>
                                         <th>Status</th>
                                         <th>Proof</th>
+                                        <th>Total</th>
                                         <th>Action</th>
                                     </tr>
                                 </thead>
@@ -45,19 +46,22 @@
                                             </td>
                                             <td>
                                                 @if ($item->proof)
-                                                    <a href="{{ asset('storage/' . $item->proof) }}" target="_blank"
-                                                        class="btn btn-sm btn-info">View</a>
+                                                    <a href="{{ asset($item->proof) }}" data-toggle="lightbox" data-title="Proof"
+                                                        class="btn btn-sm btn-info">
+                                                        View
+                                                    </a>
                                                 @else
                                                     <span class="text-muted">-</span>
                                                 @endif
                                             </td>
                                             <td>
+                                                Rp {{ number_format($item->details->sum('money'), 0, ',', '.') }}
+                                            </td>
+                                            <td>
                                                 <a href="{{ route('reimbursement.detail', $item->id) }}"
-                                                    class="btn btn-sm btn-primary" title="Detail"><i
-                                                        class="fa fa-eye"></i></a>
+                                                    class="btn btn-sm btn-primary" title="Detail"><i class="fa fa-eye"></i></a>
                                                 <a href="{{ route('reimbursement.edit', $item->id) }}"
-                                                    class="btn btn-sm btn-warning" title="Edit"><i
-                                                        class="fa fa-edit"></i></a>
+                                                    class="btn btn-sm btn-warning" title="Edit"><i class="fa fa-edit"></i></a>
                                                 <button type="button" class="btn btn-sm btn-danger" title="Delete"
                                                     onclick="confirmDelete({{ $item->id }})"><i
                                                         class="fa fa-trash"></i></button>
@@ -71,12 +75,15 @@
                                         </tr>
                                     @empty
                                         <tr>
-                                            <td colspan="5" class="text-center text-muted">No reimbursement data.</td>
+                                            <td colspan="6" class="text-center text-muted">No reimbursement data.</td>
                                         </tr>
                                     @endforelse
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                    <div class="card-footer">
+                        {{ $reimbursements->withQueryString()->links() }}
                     </div>
                 </div>
             </div>
@@ -196,9 +203,9 @@
             var newRow = table.insertRow(table.rows.length);
             newRow.innerHTML =
                 `<td><input type="date" name="expense_date[]" class="form-control" required></td>
-            <td><input type="text" name="expense_description[]" class="form-control" required></td>
-            <td><input type="number" name="expense_amount[]" class="form-control" required onkeyup="calculateModalTotal();"></td>
-            <td><button type="button" class="btn btn-danger btn-sm" onclick="delModalRow(this)"><i class="fa fa-minus"></i></button></td>`;
+                                        <td><input type="text" name="expense_description[]" class="form-control" required></td>
+                                        <td><input type="number" name="expense_amount[]" class="form-control" required onkeyup="calculateModalTotal();"></td>
+                                        <td><button type="button" class="btn btn-danger btn-sm" onclick="delModalRow(this)"><i class="fa fa-minus"></i></button></td>`;
         }
 
         function delModalRow(btn) {
@@ -226,7 +233,7 @@
         }
 
         // Reset modal form on close
-        $('#addReimbursementModal').on('hidden.bs.modal', function() {
+        $('#addReimbursementModal').on('hidden.bs.modal', function () {
             $(this).find('form')[0].reset();
             // Remove extra rows except the first
             let tbody = document.querySelector('#modalExpenseTable tbody');
@@ -236,7 +243,7 @@
             calculateModalTotal();
         });
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             calculateModalTotal();
         });
     </script>
@@ -261,7 +268,7 @@
             }
 
             // Toast for success message
-            @if (session('success'))
+            @if(session('success'))
                 Swal.fire({
                     toast: true,
                     position: 'top-end',
@@ -275,7 +282,7 @@
             @endif
 
             // Toast for error message
-            @if (session('error'))
+            @if(session('error'))
                 Swal.fire({
                     toast: true,
                     position: 'top-end',

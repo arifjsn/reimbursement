@@ -6,6 +6,8 @@ use App\Models\Reimbursement;
 use App\Models\ReimbursementDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ReimbursementController extends Controller
 {
@@ -14,7 +16,10 @@ class ReimbursementController extends Controller
      */
     public function index()
     {
-        $reimbursements = Reimbursement::where('user_id', Auth::id())->get();
+        $reimbursements = Reimbursement::where('user_id', Auth::id())
+            ->orderByDesc('created_at')
+            ->paginate(10); // paging 10 data
+
         return view('reimbursement.index', compact('reimbursements'));
     }
 
@@ -45,8 +50,15 @@ class ReimbursementController extends Controller
         ]);
 
         $proofPath = null;
-        if ($request->hasFile('proof')) {
-            $proofPath = $request->file('proof')->store('proofs', 'public');
+        if ($request->hasFile('proof') && $request->file('proof')->isValid()) {
+            // Ensure the 'proof' directory exists
+            if (!\Storage::disk('public')->exists('proof')) {
+                \Storage::disk('public')->makeDirectory('proof');
+            }
+            $file = $request->file('proof');
+            $filename = time() . '_' . Str::random(16) . '.' . $file->getClientOriginalExtension();
+            $file->move(storage_path('app/public/proof'), $filename);
+            $proofPath = "storage/proof/$filename";
         }
 
         $reimbursement = Reimbursement::create([
@@ -95,8 +107,15 @@ class ReimbursementController extends Controller
         ]);
 
         $proofPath = $reimbursement->proof;
-        if ($request->hasFile('proof')) {
-            $proofPath = $request->file('proof')->store('proofs', 'public');
+        if ($request->hasFile('proof') && $request->file('proof')->isValid()) {
+            // Ensure the 'proof' directory exists
+            if (!\Storage::disk('public')->exists('proof')) {
+                \Storage::disk('public')->makeDirectory('proof');
+            }
+            $file = $request->file('proof');
+            $filename = time() . '_' . Str::random(16) . '.' . $file->getClientOriginalExtension();
+            $file->move(storage_path('app/public/proof'), $filename);
+            $proofPath = "storage/proof/$filename";
         }
 
         $reimbursement->update([
@@ -130,7 +149,12 @@ class ReimbursementController extends Controller
         if (in_array($reimbursement->status, ['claimed', 'rejected'])) {
             return redirect()
                 ->route('reimbursement.index')
-                ->with('error', 'Reimbursement that has been '.$reimbursement->status.' cannot be deleted.');
+                ->with('error', 'Reimbursement that has been ' . $reimbursement->status . ' cannot be deleted.');
+        }
+
+        // Hapus file proof jika ada
+        if ($reimbursement->proof && file_exists(public_path($reimbursement->proof))) {
+            @unlink(public_path($reimbursement->proof));
         }
 
         $reimbursement->details()->delete();

@@ -25,7 +25,7 @@ class ReimbursementController extends Controller
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
-        $reimbursements = $query->get();
+        $reimbursements = $query->orderByDesc('created_at')->paginate(10);
 
         return view('admin.reimbursement.index', compact('reimbursements'));
     }

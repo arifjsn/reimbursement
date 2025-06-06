@@ -82,12 +82,16 @@ All Reimbursements
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="6" class="text-center text-muted">No reimbursement data found.</td>
+                                    <td colspan="7" class="text-center text-muted">No reimbursement data found.</td>
                                 </tr>
                                 @endforelse
                             </tbody>
                         </table>
                     </div>
+                </div>
+                {{-- Tambahkan pagination di bawah tabel --}}
+                <div class="card-footer">
+                    {{ $reimbursements->withQueryString()->links() }}
                 </div>
             </div>
         </div>
